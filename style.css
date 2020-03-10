@@ -1,16 +1,84 @@
-nav {
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+body {
+  font-family: 'Montserrat', 'Helvetica Neue', Helvetica, sans-serif;
+}
+/* .codecolor {
   background-color: rgb(193, 27, 29);
   color: rgb(255, 255, 255);
-}
+} */
 .content {
   text-align: center;
-  width: 100%;
 }
 .form input {
   display: block;
   min-width: 50%;
   margin: 10px auto;
 }
-.logo {
+
+.logo img {
+  min-width: 265px;
+  width: 50%;
+  margin: 50px 0;
+}
+.content .label {
+  width: 50%;
+  display: block;
+  text-align: left;
+  margin: 0 auto;
+  padding-left: 5px;
+}
+
+input {
+  border: solid #555 4px;
+  line-height: 2.5;
+  padding: 0 10px;
+  font-size: 1rem;
+}
+
+.content .form button {
+  border: none;
+  margin: auto 25px;
+  cursor: pointer;
+}
+
+/* Page profile */
+nav {
+  width: 100%;
+  background-color: #eee;
+  margin-bottom: 20px;
+}
+nav img {
   width: 70px;
+}
+.mesJeux h2 {
+  padding: 20px;
+}
+.mesJeux ul {
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+}
+.mesJeux ul li {
+  border: 1px solid black;
+  min-width: 250px;
+  flex: 1;
+  display: flex;
+  /* flex-direction: column;
+  flex-wrap: nowrap; */
+}
+.jeuImg {
+  flex: 1;
+}
+.jeuInfo {
+  flex: 2;
+  flex-direction: column;
+}
+.mesJeux ul li img {
+  width: 70px;
+  flex-direction: row;
 }
