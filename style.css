@@ -1,0 +1,16 @@
+nav {
+  background-color: rgb(193, 27, 29);
+  color: rgb(255, 255, 255);
+}
+.content {
+  text-align: center;
+  width: 100%;
+}
+.form input {
+  display: block;
+  min-width: 50%;
+  margin: 10px auto;
+}
+.logo {
+  width: 70px;
+}
