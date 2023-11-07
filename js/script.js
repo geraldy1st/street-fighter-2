@@ -1,139 +1,125 @@
-// Variables
 var $ken = $(".ken");
 var $kenPos, $fireballPos;
-var $isFireballColision = false;
 
-// Utility Functions
-function addAndRemoveClass(className, duration) {
-  $ken.addClass(className);
+var punch = function () {
+  $ken.addClass("punch");
   setTimeout(function () {
-    $ken.removeClass(className);
-  }, duration);
-}
+    $ken.removeClass("punch");
+  }, 150);
+};
 
-function isFireballColision() {
-  return $fireballPos.left + 75 > $(window).width();
-}
-
-function addFireball() {
-  var $fireball = $("<div/>", { class: "fireball" });
-  $fireball.appendTo($ken);
-
-  $isFireballColision = setInterval(function () {
-    $fireballPos = $fireball.offset();
-
-    if (isFireballColision()) {
-      $fireball
-        .addClass("explode")
-        .removeClass("moving")
-        .css("marginLeft", "+=22px");
-      clearInterval($isFireballColision);
-
-      setTimeout(function () {
-        $fireball.remove();
-      }, 500);
-    }
-  }, 50);
-
+var kick = function () {
+  $ken.addClass("kick");
   setTimeout(function () {
-    $fireball.addClass("moving");
-  }, 20);
+    $ken.removeClass("kick");
+  }, 500);
+};
 
+var rkick = function () {
+  $ken.addClass("reversekick");
   setTimeout(function () {
-    $fireball.remove();
-    clearInterval($isFireballColision);
-  }, 3020);
-}
+    $ken.removeClass("reversekick");
+  }, 500);
+};
 
-// Character Actions
-function punch() {
-  addAndRemoveClass("punch", 150);
-}
-
-function kick() {
-  addAndRemoveClass("kick", 500);
-}
-
-function rkick() {
-  addAndRemoveClass("reversekick", 500);
-}
-
-function tatsumaki() {
-  addAndRemoveClass("tatsumaki", 2000);
+var tatsumaki = function () {
+  $ken.addClass("tatsumaki");
   setTimeout(function () {
     $ken.addClass("down");
   }, 1500);
-}
-
-function hadoken() {
-  addAndRemoveClass("hadoken", 500);
-  setTimeout(addFireball, 250);
-}
-
-function shoryuken() {
-  addAndRemoveClass("shoryuken", 1000);
   setTimeout(function () {
-    $ken.addClass("down");
-  }, 500);
-}
+    $ken.removeClass("tatsumaki down");
+  }, 2000);
+};
 
-function jump() {
-  addAndRemoveClass("jump", 1000);
+var hadoken = function () {
+  $ken.addClass("hadoken");
   setTimeout(function () {
-    $ken.addClass("down");
+    $ken.removeClass("hadoken");
   }, 500);
-}
+  setTimeout(function () {
+    var $fireball = $("<div/>", { class: "fireball" });
+    $fireball.appendTo($ken);
 
-function kneel() {
-  $ken.addClass("kneel");
-}
+    var isFireballCollision = function () {
+      return $fireballPos.left + 75 > $(window).width() ? true : false;
+    };
 
-function walkLeft() {
-  $ken.addClass("walk").css({ marginLeft: "-=10px" });
-}
+    var explodeIfCollision = setInterval(function () {
+      $fireballPos = $fireball.offset();
+      // console.log('fireballInterval:', $fireballPos.left);
 
-function walkRight() {
-  $ken.addClass("walk").css({ marginLeft: "+=10px" });
-}
+      if (isFireballCollision()) {
+        $fireball
+          .addClass("explode")
+          .removeClass("moving")
+          .css("marginLeft", "+=22px");
+        clearInterval(explodeIfCollision);
+        setTimeout(function () {
+          $fireball.remove();
+        }, 500);
+      }
+    }, 50);
 
-// Event Handlers
+    setTimeout(function () {
+      $fireball.addClass("moving");
+    }, 20);
+
+    setTimeout(function () {
+      $fireball.remove();
+      clearInterval(explodeIfCollision);
+    }, 3020);
+  }, 250);
+};
+
+// Other action functions go here...
+
+// Event handling
 $("#a").click(punch);
 $("#z").click(kick);
 $("#e").click(rkick);
 $("#q").click(tatsumaki);
 $("#s").click(hadoken);
-$("#d").click(shoryuken);
-$("#up").click(jump);
-$("#down").on("mousedown mouseup", function (e) {
-  if (e.type === "mousedown") {
-    kneel();
-  } else {
-    $ken.removeClass("kneel");
-  }
-});
 
-$("#left").on("mousedown mouseup", function (e) {
-  if (e.type === "mousedown") {
-    walkLeft();
-  } else {
-    $ken.removeClass("walk");
-  }
-});
-
-$("#right").on("mousedown mouseup", function (e) {
-  if (e.type === "mousedown") {
-    walkRight();
-  } else {
-    $ken.removeClass("walk");
-  }
-});
-
+// Handle key events
 $(document).on("keydown keyup", function (e) {
   if (e.type === "keydown") {
-    // Handle keydown events
-    // ...
+    // Use e.key for key identification
+    switch (e.key) {
+      case "s":
+        if (
+          !$ken.hasClass("tatsumaki") &&
+          !$ken.hasClass("shoryuken") &&
+          !$ken.hasClass("hadoken") &&
+          !$ken.hasClass("punch") &&
+          !$ken.hasClass("kick") &&
+          !$ken.hasClass("reversekick")
+        ) {
+          hadoken();
+        }
+        break;
+      case "d":
+        if (
+          !$ken.hasClass("tatsumaki") &&
+          !$ken.hasClass("shoryuken") &&
+          !$ken.hasClass("hadoken") &&
+          !$ken.hasClass("punch") &&
+          !$ken.hasClass("kick") &&
+          !$ken.hasClass("reversekick") &&
+          !$ken.hasClass("jump")
+        ) {
+          shoryuken();
+        }
+        break;
+      // Add cases for other actions...
+    }
   } else {
-    // Handle keyup events
+    // keyup
     $ken.removeClass("walk kneel");
+  }
+
+  // Prevent default behavior of arrow keys
+  if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+    e.preventDefault();
   }
 });
